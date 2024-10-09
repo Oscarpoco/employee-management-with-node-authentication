@@ -13,6 +13,9 @@ function NavBar({ onNavigate, onSignOut, currentView}){
 
                 <button className= {currentView === 'registration' ? 'active' : ''}
                 onClick={() => onNavigate('registration')}>Register</button>
+
+                <button className= {currentView === 'admins' ? 'active' : ''}
+                onClick={() => onNavigate('admins')}>Admins</button>
             </div>
 
             <div className='logout-button'>

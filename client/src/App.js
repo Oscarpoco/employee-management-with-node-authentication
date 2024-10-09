@@ -9,6 +9,7 @@ import NavBar from './components/navBar';
 import Loader from './components/Loader';
 import Notification from './components/notification';
 import { storage, ref, uploadBytes, getDownloadURL } from './firebase/FirebaseConfig';
+import Admins from './components/Admins';
 
 function App() {
   const [currentView, setCurrentView] = useState('signIn');
@@ -18,6 +19,7 @@ function App() {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState('');
+  const [viewDeletedEmployees, setViewDeletedEmployees ] = useState('employees');
 
   // Check login status on component mount
   useEffect(() => {
@@ -58,38 +60,60 @@ function App() {
     fetchDeletedEmployees();
   }, []);
 
-  // Handle add employee
+
+  // HANDLE ADD EMPLOYEE
   const handleAddEmployee = async (employee, file) => {
     setIsLoading(true);
   
     try {
+      // Check if employee already exists
+      const checkResponse = await axios.post('http://localhost:5000/check-employee', {
+        email: employee.email,
+        idNumber: employee.idNumber,
+        phone: employee.phone
+      });
+  
+      if (checkResponse.data.exists) {
+        setNotification({ message: checkResponse.data.message, type: 'error' });
+        return;
+      }
+  
       let imageUrl = '';
   
       // Upload the image to Firebase Storage if a file is provided
       if (file) {
-        const storageRef = ref(storage, `employees/${file.name}`); // You can customize the storage path
+        const uniqueFilename = `${Date.now()}_${file.name}`;
+        const storageRef = ref(storage, `employees/${uniqueFilename}`);
         const snapshot = await uploadBytes(storageRef, file);
-        imageUrl = await getDownloadURL(snapshot.ref); // Get the uploaded image URL
+        imageUrl = await getDownloadURL(snapshot.ref);
       }
   
-      // Now include the image URL in the employee object
+      // Include the image URL in the employee object
       const newEmployee = { ...employee, profilePicture: imageUrl };
   
+      // Send the employee data wrapped in an object with the 'employee' key
       const response = await axios.post('http://localhost:5000/employees', { employee: newEmployee });
   
       setEmployees([...employees, { ...newEmployee, id: response.data.id }]);
-      setNotification('Successfully added');
+      setNotification({ message: 'Successfully added', type: 'success' });
     } catch (error) {
       console.error('Error adding employee:', error);
-      setNotification('Failed to add employee');
+      if (error.response) {
+        console.error('Server response:', error.response.data);
+      }
+      setNotification('Failed to add employee: ' + (error.response?.data?.message || error.message));
     } finally {
       setIsLoading(false);
-      setTimeout(() => setNotification(''), 2000);
+      setTimeout(() => setNotification(''), 3000);
     }
   };
 
+
   // Handle delete employee
   const handleDeleteEmployee = async (id) => {
+
+    setIsLoading(true);
+
     try {
       const employeeToDelete = employees.find(emp => emp.id === id);
       await axios.delete(`http://localhost:5000/employees/${id}`);
@@ -100,6 +124,7 @@ function App() {
       console.error('Error deleting employee:', error);
       setNotification({ message: 'Failed to delete employee', type: 'error' });
     } finally {
+      setIsLoading(false);
       setTimeout(() => setNotification(''), 2000);
     }
   };
@@ -156,9 +181,20 @@ function App() {
 
   // Handle view employee profile
   const handleViewEmployee = (employee) => {
-    setSelectedEmployee(employee);  // Set the selected employee
-    setCurrentView('profile');      // Switch to the profile view
+    setSelectedEmployee(employee); 
+    setCurrentView('profile');      
   };
+
+  // setViewDeletedEmployees
+  const HandleOpenViewDeletedEmployees = () => {
+    setViewDeletedEmployees('deletedEmployees');
+  }
+
+  const HandleCloseViewDeletedEmployees = () => {
+    setViewDeletedEmployees('employees');
+  }
+
+  // ENDS
 
   const renderContent = () => {
     switch (currentView) {
@@ -171,12 +207,24 @@ function App() {
             onDeleteEmployee={handleDeleteEmployee}
             onViewEmployee={handleViewEmployee}
             deletedEmployees={deletedEmployees}
+            HandleOpenViewDeletedEmployees ={HandleOpenViewDeletedEmployees}
+            HandleCloseViewDeletedEmployees ={HandleCloseViewDeletedEmployees}
+            viewDeletedEmployees= {viewDeletedEmployees}
           />
         );
+
       case 'registration':
         return <Registration onAddEmployee={handleAddEmployee} setCurrentView={setCurrentView} />;
+
       case 'profile':
-        return <Profile employee={selectedEmployee} onUpdateEmployee={handleUpdateEmployee} />;
+        return <Profile 
+                employee={selectedEmployee} 
+                onUpdateEmployee={handleUpdateEmployee} 
+              />;
+
+      case 'admins':
+        return <Admins/>;
+
       default:
         return <SignIn onLogin={handleLogin} />;
     }
@@ -184,8 +232,8 @@ function App() {
 
   const handleNavigate = (currentView) => {
     setIsLoading(true);
-    setCurrentView(currentView);
     setTimeout(() => {
+      setCurrentView(currentView);
       setIsLoading(false);
     }, 2000);
   };

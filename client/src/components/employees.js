@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './employees.css';
 
-function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEmployees = [] }) {
+function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEmployees = [], viewDeletedEmployees, HandleOpenViewDeletedEmployees, HandleCloseViewDeletedEmployees }) {
   const [searchId, setSearchId] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState(employees);
+  const [filteredPreviousEmployees, setFilteredPreviousEmployees] = useState(deletedEmployees);
 
   useEffect(() => {
     setFilteredEmployees(employees);
   }, [employees]);
+
+  // PREV EMPLOYEES
+  useEffect(() => {
+    setFilteredPreviousEmployees(deletedEmployees);
+  }, [deletedEmployees]);
 
   // HANDLE SEARCH
   const handleSearch = () => {
@@ -19,8 +25,22 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
     }
   };
 
+
+  // HANDLE SEARCH
+  const handleSearchPrevEmployees = () => {
+    if (searchId) {
+      const result = deletedEmployees.filter(employee => employee.idNumber.includes(searchId));
+      setFilteredPreviousEmployees(result);
+    } else {
+      setFilteredPreviousEmployees(employees);
+    }
+  };
+
   return (
     <div className='employees-box'>
+
+      {viewDeletedEmployees === 'employees' ?
+
       <div className='current-employees'>
         <div className='employees'>
           <div className='title'>CURRENT EMPLOYEES</div>
@@ -32,6 +52,7 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
               onChange={(e) => setSearchId(e.target.value)} 
             />
             <button onClick={handleSearch}>Search</button>
+            <button className='previous-employees-button' onClick={HandleOpenViewDeletedEmployees}>View Previous Employees</button>
           </div>
           <div className='employees-table'>
             {filteredEmployees.length > 0 ? (
@@ -57,7 +78,7 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
                       <td>{employee.idNumber}</td>
                       <td>{employee.position}</td>
                       <td>{employee.phone}</td>
-                      <td><img src={employee.image} alt='employee'/></td>
+                      <td><img src={employee.profilePicture} alt='employee'/></td>
                       <td className='table-div'>
                         <button className='table-button' onClick={() => onViewEmployee(employee)}>View</button>
                         <button className='table-button' onClick={() => onDeleteEmployee(employee.id)}>Delete</button>
@@ -73,11 +94,23 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
         </div>
       </div>
 
+      :
+
       <div className='previous-employees'>
         <div className='deleted-employees'>
           <div className='title'>PREVIOUS EMPLOYEES</div>
+          <div className='search-box'>
+            <input 
+              type='text' 
+              placeholder='Search by ID' 
+              value={searchId} 
+              onChange={(e) => setSearchId(e.target.value)} 
+            />
+            <button onClick={handleSearchPrevEmployees}>Search</button>
+            <button className='previous-employees-button' onClick={HandleCloseViewDeletedEmployees}>View Employees</button>
+          </div>
           <div className='employees-table'>
-            {deletedEmployees.length > 0 ? (
+            {filteredPreviousEmployees.length > 0 ? (
               <table>
                 <thead>
                   <tr>
@@ -91,7 +124,7 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
                   </tr>
                 </thead>
                 <tbody>
-                  {deletedEmployees.map((employee, index) => (
+                  {filteredPreviousEmployees.map((employee, index) => (
                     <tr key={index}>
                       <td>{employee.name}</td>
                       <td>{employee.surname}</td>
@@ -99,7 +132,7 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
                       <td>{employee.idNumber}</td>
                       <td>{employee.position}</td>
                       <td>{employee.phone}</td>
-                      <td><img src={employee.image} alt='employee' width='50' /></td>
+                      <td><img src={employee.profilePicture} alt='employee' width='50' /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -110,6 +143,8 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
           </div>
         </div>
       </div>
+      }
+
     </div>
   );
 }

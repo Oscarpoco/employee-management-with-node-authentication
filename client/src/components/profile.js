@@ -32,7 +32,7 @@ function Profile({ employee, onUpdateEmployee }) {
             <div className='profile-title'>PROFILE</div>
             <div className='profile'>
                 <div className='img-circle'>
-                    <img src={editedEmployee.image} alt='Employee' />
+                    <img src={editedEmployee.profilePicture} alt='Employee' />
                 </div>
                 <div className='details-box'>
                     <div className='details'>
