@@ -1,9 +1,9 @@
 
 .myNav
 {
-    width: 80%;
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 1em;
     box-sizing: border-box;
@@ -39,6 +39,7 @@ button.active
   justify-content: end;
   align-items: center;
   width: 30%;
+  background: transparent;
  
 }
 .navigate-button
@@ -48,6 +49,8 @@ button.active
   align-items: center;
   width: 70%;
   gap: 1em;
+  box-sizing: border-box;
+  background: transparent;
 }
 
 .myNav button:hover

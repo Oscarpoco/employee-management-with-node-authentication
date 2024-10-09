@@ -6,9 +6,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: black;
+    background: rgba(0, 0, 0, .7);
     box-sizing: border-box;
     position: relative;
+    padding-top: 1em;
 }
 
 .current-employees
@@ -143,8 +144,8 @@
 .employees-table
 {
     width: 100%;
-    max-height: auto;
-    background: inherit;
+    max-height: 100%;
+    background: rgba(0, 0, 0, .1);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -178,7 +179,6 @@ table
     border-collapse: collapse;
     color: aqua;
     box-sizing: border-box;
-    padding: .3em 0;
     text-align: center;
 }
 
@@ -191,7 +191,7 @@ table
 thead th 
 {
     position: sticky;
-    top: 0;
+    top: -1px;
     background: #434343;
     box-sizing: 0 0 10px;
     font-size: 100%;
@@ -202,7 +202,7 @@ thead th
 
 .employees-table td 
 {
-    background: black;
+    background: rgba(0, 0, 0, .7);
     font-size: 100%;
     padding: .3em .7em;
     white-space: nowrap;

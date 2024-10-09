@@ -5,8 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: inherit;
-    padding: 0 2em;
+    padding: 0 0 0 2em;
     box-sizing: border-box;
 }
 
@@ -27,17 +26,17 @@
 
 .admin
 {
-    background: aqua;
+    background: rgba(0, 255, 255, 0.6);
     padding: .7em 0;
-    width: 75%;
+    width: 100%;
     color: black;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 900;
     font-size: 100%;
-    border: 1px solid aqua;
-    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 255, 0.6);
+    border-radius: 10px;
 }
 
 form
@@ -51,15 +50,15 @@ form
     align-items: center;
     gap: 1.5em;
     box-sizing: border-box;  
-    border: 2px solid aqua; 
-    border-radius: 20px;
+    border: 2px solid rgba(0, 255, 255, 0.6); 
+    border-radius: 10px;
 }
 form input
 {
     width: 75%;
     padding: 1em 2em;
     border: none;
-    border: 2px solid aqua;
+    border: 2px solid rgba(11, 255, 255, 0.171);
     border-radius: 20px;  
     background: rgba(11, 255, 255, 0.171);
     outline: none;
@@ -80,17 +79,18 @@ form button
     padding: .7em 2em;
     font-weight: 900;
     font-size: 100%;
-    border: 2px solid aqua;
+    border: 2px solid rgba(0, 255, 255, 0.4);
     color: black;
-    background-color: aqua;
+    background: rgba(0, 255, 255, 0.6);
     border-radius: 10px;
 }
 
 form button:hover
 {
-    border: 2px solid rgb(5, 104, 71);
-    color: rgb(5, 104, 71);
+    border: 2px solid rgba(158, 188, 188, 0.4);
+    color: black;
     transition: all .5s ease-in-out;
+    background: rgba(158, 188, 188, 0.6);
 }
 .logo-box
 {
@@ -104,9 +104,10 @@ form button:hover
 
 .logo-box img
 {
-    width: 500px;
-    height: 500px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    opacity: .15;
 }
 
 @media only screen and (max-width: 768px)
