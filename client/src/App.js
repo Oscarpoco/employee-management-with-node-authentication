@@ -187,11 +187,23 @@ function App() {
 
   // setViewDeletedEmployees
   const HandleOpenViewDeletedEmployees = () => {
-    setViewDeletedEmployees('deletedEmployees');
+   
+    setIsLoading(true);
+    setTimeout(()=>{
+     setViewDeletedEmployees('deletedEmployees');
+     setIsLoading(false);
+   }, 2000);
+
   }
 
   const HandleCloseViewDeletedEmployees = () => {
+
+   setIsLoading(true);
+   setTimeout(()=>{
     setViewDeletedEmployees('employees');
+    setIsLoading(false);
+   }, 2000);
+
   }
 
   // ENDS

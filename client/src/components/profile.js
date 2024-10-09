@@ -4,6 +4,7 @@ import './profile.css';
 function Profile({ employee, onUpdateEmployee }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedEmployee, setEditedEmployee] = useState({ ...employee });
+    const [viewPicture, setViewPicture] = useState('');
 
     // Update the state whenever the employee prop changes
     useEffect(() => {
@@ -31,7 +32,7 @@ function Profile({ employee, onUpdateEmployee }) {
         <div className='profile-box'>
             <div className='profile-title'>PROFILE</div>
             <div className='profile'>
-                <div className='img-circle'>
+                <div className='img-circle' onClick={(()=>{setViewPicture(true)})}>
                     <img src={editedEmployee.profilePicture} alt='Employee' />
                 </div>
                 <div className='details-box'>
@@ -48,6 +49,18 @@ function Profile({ employee, onUpdateEmployee }) {
                     </div>
                 </div>
             </div>
+
+            {/* PROFILE PICTURE POPUP */}
+            {viewPicture && (
+                <div className='picture-popup'>
+                    <div className='employee-picture'>
+                        <img src={editedEmployee.profilePicture} alt='employee-picture'></img>
+                    </div>
+                    <button className='profile-close' onClick={(()=>{setViewPicture(false)})}>
+                        <span>+</span>
+                    </button>
+                </div>
+            )}
         </div>
     );
     // ENDS

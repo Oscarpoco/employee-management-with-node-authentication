@@ -29,10 +29,10 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
   // HANDLE SEARCH
   const handleSearchPrevEmployees = () => {
     if (searchId) {
-      const result = deletedEmployees.filter(employee => employee.idNumber.includes(searchId));
+      const result = deletedEmployees.filter(deletedEmployee => deletedEmployee.idNumber.includes(searchId));
       setFilteredPreviousEmployees(result);
     } else {
-      setFilteredPreviousEmployees(employees);
+      setFilteredPreviousEmployees(deletedEmployees);
     }
   };
 
