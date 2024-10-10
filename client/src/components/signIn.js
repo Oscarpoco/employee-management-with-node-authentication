@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/FirebaseConfig';
 
-function SignIn({ onLogin }) {
+function SignIn({ onLogin, setLoggedInAdmin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [notification, setNotification] = useState('');
@@ -15,12 +15,23 @@ function SignIn({ onLogin }) {
         try {
             // Firebase email/password sign-in
             await signInWithEmailAndPassword(auth, username, password);
-            onLogin();
+    
+            // Get logged-in user's email
+            const user = auth.currentUser;
+            if (user) {
+                const userEmail = user.email;
+                setLoggedInAdmin(userEmail);
+                localStorage.setItem('loggedInAdmin', userEmail);
+            }
+            
+            
+            onLogin(); 
         } catch (error) {
             setNotification('Invalid credentials');
             setTimeout(() => setNotification(''), 2000);
         }
     };
+    
 
     return (
         <div className='form-box'>

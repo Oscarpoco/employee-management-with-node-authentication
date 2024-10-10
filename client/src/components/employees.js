@@ -124,15 +124,15 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPreviousEmployees.map((employee, index) => (
+                  {filteredPreviousEmployees.map((deletedEmployee, index) => (
                     <tr key={index}>
-                      <td>{employee.name}</td>
-                      <td>{employee.surname}</td>
-                      <td>{employee.email}</td>
-                      <td>{employee.idNumber}</td>
-                      <td>{employee.position}</td>
-                      <td>{employee.phone}</td>
-                      <td><img src={employee.profilePicture} alt='employee' width='50' /></td>
+                      <td>{deletedEmployee.name}</td>
+                      <td>{deletedEmployee.surname}</td>
+                      <td>{deletedEmployee.email}</td>
+                      <td>{deletedEmployee.idNumber}</td>
+                      <td>{deletedEmployee.position}</td>
+                      <td>{deletedEmployee.phone}</td>
+                      <td><img src={deletedEmployee.profilePicture} alt='employee' width='50' /></td>
                     </tr>
                   ))}
                 </tbody>

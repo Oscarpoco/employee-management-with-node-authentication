@@ -1,6 +1,12 @@
+
+// REACT IMPORTS
 import { useState, useEffect } from 'react';
+
+// EXTRA IMPORTS
 import axios from 'axios';
 import './App.css';
+
+// COMPONENTS
 import SignIn from './components/signIn';
 import Employees from './components/employees';
 import Registration from './components/registration';
@@ -8,25 +14,48 @@ import Profile from './components/profile';
 import NavBar from './components/navBar';
 import Loader from './components/Loader';
 import Notification from './components/notification';
-import { storage, ref, uploadBytes, getDownloadURL } from './firebase/FirebaseConfig';
 import Admins from './components/Admins';
 
+// FIREBASE IMPORTS
+import { storage, ref, uploadBytes, getDownloadURL } from './firebase/FirebaseConfig';
+
 function App() {
+
   const [currentView, setCurrentView] = useState('signIn');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // EMPLOYEES AND ADMINS
   const [employees, setEmployees] = useState([]);
+  const [admins, setAdmins] = useState([]);
+
+  // DELETED EMPLOYEES AND ADMINS
   const [deletedEmployees, setDeletedEmployees] = useState([]);
+  const [deletedAdmins, setDeletedAdmins] = useState([]);
+
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState('');
+
+  // VIEW EMPLOYEES AND ADMINS
   const [viewDeletedEmployees, setViewDeletedEmployees ] = useState('employees');
+  const [viewDeletedAdmins, setViewDeletedAdmins ] = useState('admins');
+
+  // LOGGED IN ADMIN'S EMAIL
+  const [loggedInAdmin, setLoggedInAdmin] = useState(null);
+
 
   // Check login status on component mount
   useEffect(() => {
     const loggedIn = window.localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedIn);
+
+    const newLoggedInAdmin = window.localStorage.getItem('loggedInAdmin');
+    setLoggedInAdmin(newLoggedInAdmin);
+
     setCurrentView(loggedIn ? 'employees' : 'signIn');
   }, []);
+
 
   // Load employees from server
   useEffect(() => {
@@ -171,10 +200,16 @@ function App() {
   const handleSignOut = () => {
     setIsLoading(true);
     setTimeout(() => {
+
       localStorage.removeItem('isLoggedIn');
       setIsLoggedIn(false);
-      setSelectedEmployee(null); // Clear selected employee
+
+      localStorage.removeItem('loggedInAdmin');
+      setLoggedInAdmin(null);
+
+      setSelectedEmployee(null);
       setCurrentView('signIn');
+
       setIsLoading(false);
     }, 2000);
   };
@@ -206,12 +241,38 @@ function App() {
 
   }
 
+  // setViewDeletedEmployees
+  const HandleOpenViewDeletedAdmins = () => {
+   
+    setIsLoading(true);
+    setTimeout(()=>{
+     setViewDeletedAdmins('deletedAdmins');
+     setIsLoading(false);
+   }, 2000);
+
+  }
+
+  const HandleCloseViewDeletedAdmins = () => {
+
+   setIsLoading(true);
+   setTimeout(()=>{
+    setViewDeletedAdmins('admins');
+    setIsLoading(false);
+   }, 2000);
+
+  }
+
   // ENDS
 
   const renderContent = () => {
     switch (currentView) {
       case 'signIn':
-        return <SignIn onLogin={handleLogin} />;
+        return <SignIn 
+                  onLogin={handleLogin} 
+                  setLoggedInAdmin={setLoggedInAdmin} 
+                  loggedInAdmin={loggedInAdmin}
+              />;
+
       case 'employees':
         return (
           <Employees
@@ -226,19 +287,34 @@ function App() {
         );
 
       case 'registration':
-        return <Registration onAddEmployee={handleAddEmployee} setCurrentView={setCurrentView} />;
+        return <Registration 
+                  onAddEmployee={handleAddEmployee} 
+                  setCurrentView={setCurrentView} 
+              />;
 
       case 'profile':
         return <Profile 
-                employee={selectedEmployee} 
-                onUpdateEmployee={handleUpdateEmployee} 
+                  employee={selectedEmployee} 
+                  onUpdateEmployee={handleUpdateEmployee} 
               />;
 
       case 'admins':
-        return <Admins/>;
+        return <Admins
+                  admins={admins}
+                  onDeleteAdmin={handleDeleteEmployee}
+                  onViewEmployee={handleViewEmployee}
+                  deletedAdmins={deletedAdmins}
+                  HandleOpenViewDeletedAdmins ={HandleOpenViewDeletedAdmins}
+                  HandleCloseViewDeletedAdmins ={HandleCloseViewDeletedAdmins}
+                  viewDeletedAdmins= {viewDeletedAdmins}
+        />;
 
       default:
-        return <SignIn onLogin={handleLogin} />;
+        return <SignIn 
+                  onLogin={handleLogin} 
+                  setLoggedInAdmin ={setLoggedInAdmin} 
+                  loggedInAdmin={loggedInAdmin}
+              />;
     }
   };
 
@@ -258,11 +334,17 @@ function App() {
             <div className='gamefusion'><p>GAME<span>FUXION</span></p></div>
           </div>
           {isLoggedIn && (
-            <NavBar onNavigate={handleNavigate} onSignOut={handleSignOut} setIsLoading={setIsLoading} currentView={currentView}/>
+            <NavBar 
+              onNavigate={handleNavigate} 
+              onSignOut={handleSignOut} 
+              setIsLoading={setIsLoading} 
+              currentView={currentView}
+              loggedInAdmin={loggedInAdmin}
+            />
           )}
         </nav>
         <div className='content'>
-          {renderContent()}
+          {renderContent()}.
         </div>
       </main>
       {isLoading && <Loader />}

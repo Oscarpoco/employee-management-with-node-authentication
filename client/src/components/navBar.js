@@ -1,7 +1,7 @@
 
 import './navBar.css';
 
-function NavBar({ onNavigate, onSignOut, currentView}){
+function NavBar({ onNavigate, onSignOut, currentView, loggedInAdmin}){
 
     
     return(
@@ -14,8 +14,13 @@ function NavBar({ onNavigate, onSignOut, currentView}){
                 <button className= {currentView === 'registration' ? 'active' : ''}
                 onClick={() => onNavigate('registration')}>Register</button>
 
-                <button className= {currentView === 'admins' ? 'active' : ''}
-                onClick={() => onNavigate('admins')}>Admins</button>
+                {/* ONLY ALLOWED FOR SUPER ADMIN */}
+                {loggedInAdmin === 'admin@gamefuxionza.com' && (
+                    <button className= {currentView === 'admins' ? 'active' : ''}
+                    onClick={() => onNavigate('admins')}>Admins</button>
+                )}
+                {/* ENDS */}
+
             </div>
 
             <div className='logout-button'>
