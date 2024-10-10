@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './employees.css';
 import './registration.css';
 
+// ICONS
+import { GrView } from "react-icons/gr";
+import { MdOutlinePlaylistRemove } from "react-icons/md";
+
 function Admins({ 
   admins = [], 
   onDeleteAdmin, 
@@ -125,8 +129,8 @@ function Admins({
                       <td>{admin.phone}</td>
                       <td><img src={admin.profilePicture} alt='employee'/></td>
                       <td className='table-div'>
-                        <button className='table-button' onClick={() => onViewEmployee(admin)}>View</button>
-                        <button className='table-button' onClick={() => onDeleteAdmin(admin.id)}>Delete</button>
+                        <button className='table-button' onClick={() => onViewEmployee(admin)}><GrView className='icons'/></button>
+                        <button className='table-button' onClick={() => onDeleteAdmin(admin.id)}><MdOutlinePlaylistRemove className='icons'/></button>
                       </td>
                     </tr>
                   ))}

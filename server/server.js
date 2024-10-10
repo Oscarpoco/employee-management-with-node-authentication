@@ -22,6 +22,7 @@ const PORT = process.env.PORT;
 
 
 // EMPLOYEES SERVER QUERIES
+
 // Add employee (equivalent to Firestore addDoc)
 app.post('/employees', async (req, res) => {
   const { employee } = req.body;
@@ -187,6 +188,17 @@ app.put('/employees/:id', async (req, res) => {
 app.get('/admins', async (req, res) => {
   try {
     const adminsSnapshot = await db.collection('admins').get();
+    const admins = adminsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.status(200).json(admins);
+  } catch (error) {
+    console.error('Error fetching admins:', error);
+    res.status(500).json({ message: 'Failed to fetch admins' });
+  }
+});
+
+app.get('/deletedAdmins', async (req, res) => {
+  try {
+    const adminsSnapshot = await db.collection('deletedAdmins').get();
     const admins = adminsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.status(200).json(admins);
   } catch (error) {

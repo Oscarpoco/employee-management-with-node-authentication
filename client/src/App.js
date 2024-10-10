@@ -57,6 +57,8 @@ function App() {
   }, []);
 
 
+  // HANDLES POST, GET, PUT AND DELETE FOR ONLY EMPLOYEES
+
   // Load employees from server
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -137,7 +139,6 @@ function App() {
     }
   };
 
-
   // Handle delete employee
   const handleDeleteEmployee = async (id) => {
 
@@ -175,6 +176,131 @@ function App() {
       setTimeout(() => setNotification(''), 2000);
     }
   };
+
+  // HANDLES POST, GET, PUT AND DELETE FOR ONLY EMPLOYEES ENDS
+
+
+  // HANDLES POST, GET, PUT AND DELETE FOR ONLY ADMINS STARTS
+
+  // fetch deleted admins
+  useEffect(()=>{
+    const fetchDeletedAdmins = async () => {
+      setIsLoading(true);
+      try {
+          const response = await axios.get(`http://localhost:5000/deletedAdmins`);
+          setDeletedAdmins(response.data);
+      } catch (error) {
+          console.error('Error fetching deleted admins:', error);
+      } finally {
+          setIsLoading(false);
+      }
+  };
+  fetchDeletedAdmins();
+  }, [])
+
+
+  // fetch admins 
+  useEffect(()=>{
+    const fetchAdmins = async () => {
+      setIsLoading(true);
+      try {
+          const response = await axios.get(`http://localhost:5000/admins`);
+          setAdmins(response.data);
+      } catch (error) {
+          console.error('Error fetching deleted admins:', error);
+      } finally {
+          setIsLoading(false);
+      }
+  };
+  fetchAdmins();
+  }, [])
+
+  // handles adding
+  const handleAddAdmin = async (admin, file) => {
+    setIsLoading(true);
+  
+    try {
+      // Check if admin already exists
+      const checkResponse = await axios.post('http://localhost:5000/check-admin', {
+        email: admin.email,
+        idNumber: admin.idNumber,
+        phone: admin.phone
+      });
+  
+      if (checkResponse.data.exists) {
+        setNotification({ message: checkResponse.data.message, type: 'error' });
+        return;
+      }
+  
+      let imageUrl = '';
+  
+      // Upload the image to Firebase Storage if a file is provided
+      if (file) {
+        const uniqueFilename = `${Date.now()}_${file.name}`;
+        const storageRef = ref(storage, `admins/${uniqueFilename}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        imageUrl = await getDownloadURL(snapshot.ref);
+      }
+  
+      // Include the image URL in the admin object
+      const newAdmin = { ...admin, profilePicture: imageUrl };
+  
+      // Send the admin data wrapped in an object with the 'admin' key
+      const response = await axios.post('http://localhost:5000/admins', { admin: newAdmin });
+  
+      setAdmins([...admins, { ...newAdmin, id: response.data.id }]);
+      setNotification({ message: 'Successfully added admin', type: 'success' });
+    } catch (error) {
+      console.error('Error adding admin:', error);
+      setNotification('Failed to add admin: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => setNotification(''), 3000);
+    }
+  };
+
+  // handles delete
+  const handleDeleteAdmin = async (id) => {
+    setIsLoading(true);
+  
+    try {
+      const adminToDelete = admins.find(admin => admin.id === id);
+      await axios.delete(`http://localhost:5000/admins/${id}`);
+      setAdmins(admins.filter(admin => admin.id !== id));
+      setDeletedAdmins([...deletedAdmins, adminToDelete]);
+      setNotification({ message: 'Successfully deleted admin', type: 'success' });
+    } catch (error) {
+      console.error('Error deleting admin:', error);
+      setNotification({ message: 'Failed to delete admin', type: 'error' });
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => setNotification(''), 2000);
+    }
+  };
+
+  // handles updates
+  const handleUpdateAdmin = async (updatedAdmin) => {
+    setIsLoading(true);
+    try {
+      await axios.put(`http://localhost:5000/admins/${updatedAdmin.id}`, updatedAdmin);
+      setAdmins((prevAdmins) =>
+        prevAdmins.map(admin => (admin.id === updatedAdmin.id ? updatedAdmin : admin))
+      );
+      setNotification({ message: 'Successfully updated admin', type: 'success' });
+    } catch (error) {
+      console.error('Error updating admin:', error);
+      setNotification({ message: 'Failed to update admin', type: 'error' });
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => setNotification(''), 2000);
+    }
+  };
+
+  // HANDLES POST, GET, PUT AND DELETE FOR ONLY ADMINS ENDS
+
+
+
+  // OTHER FUNCTIONS STARTS
 
   // Handle login
   const handleLogin = async () => {
@@ -296,12 +422,14 @@ function App() {
         return <Profile 
                   employee={selectedEmployee} 
                   onUpdateEmployee={handleUpdateEmployee} 
+                  handleUpdateAdmin={handleUpdateAdmin} 
               />;
 
       case 'admins':
         return <Admins
                   admins={admins}
-                  onDeleteAdmin={handleDeleteEmployee}
+                  onDeleteAdmin={handleDeleteAdmin}
+                  handleAddAdmin={handleAddAdmin}
                   onViewEmployee={handleViewEmployee}
                   deletedAdmins={deletedAdmins}
                   HandleOpenViewDeletedAdmins ={HandleOpenViewDeletedAdmins}

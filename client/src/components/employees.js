@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './employees.css';
 
+// ICONS
+import { GrView } from "react-icons/gr";
+import { MdOutlinePlaylistRemove } from "react-icons/md";
+
 function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEmployees = [], viewDeletedEmployees, HandleOpenViewDeletedEmployees, HandleCloseViewDeletedEmployees }) {
   const [searchId, setSearchId] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState(employees);
@@ -80,8 +84,8 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
                       <td>{employee.phone}</td>
                       <td><img src={employee.profilePicture} alt='employee'/></td>
                       <td className='table-div'>
-                        <button className='table-button' onClick={() => onViewEmployee(employee)}>View</button>
-                        <button className='table-button' onClick={() => onDeleteEmployee(employee.id)}>Delete</button>
+                        <button className='table-button' onClick={() => onViewEmployee(employee)}><GrView className='icons'/></button>
+                        <button className='table-button' onClick={() => onDeleteEmployee(employee.id)}><MdOutlinePlaylistRemove className='icons'/></button>
                       </td>
                     </tr>
                   ))}
