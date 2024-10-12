@@ -23,6 +23,7 @@ function App() {
 
   const [currentView, setCurrentView] = useState('signIn');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [adminEdit, setAdminEdit] = useState(false);
 
   // EMPLOYEES AND ADMINS
   const [employees, setEmployees] = useState([]);
@@ -279,12 +280,12 @@ function App() {
   };
 
   // handles updates
-  const handleUpdateAdmin = async (updatedAdmin) => {
+  const handleUpdateAdmin = async (updatedEmployee) => {
     setIsLoading(true);
     try {
-      await axios.put(`http://localhost:5000/admins/${updatedAdmin.id}`, updatedAdmin);
+      await axios.put(`http://localhost:5000/admins/${updatedEmployee.id}`, updatedEmployee);
       setAdmins((prevAdmins) =>
-        prevAdmins.map(admin => (admin.id === updatedAdmin.id ? updatedAdmin : admin))
+        prevAdmins.map(admin => (admin.id === updatedEmployee.id ? updatedEmployee : admin))
       );
       setNotification({ message: 'Successfully updated admin', type: 'success' });
     } catch (error) {
@@ -409,6 +410,7 @@ function App() {
             HandleOpenViewDeletedEmployees ={HandleOpenViewDeletedEmployees}
             HandleCloseViewDeletedEmployees ={HandleCloseViewDeletedEmployees}
             viewDeletedEmployees= {viewDeletedEmployees}
+            setAdminEdit={setAdminEdit}
           />
         );
 
@@ -422,7 +424,8 @@ function App() {
         return <Profile 
                   employee={selectedEmployee} 
                   onUpdateEmployee={handleUpdateEmployee} 
-                  handleUpdateAdmin={handleUpdateAdmin} 
+                  handleUpdateAdmin={handleUpdateAdmin}   
+                  adminEdit ={adminEdit}                    
               />;
 
       case 'admins':
@@ -435,6 +438,7 @@ function App() {
                   HandleOpenViewDeletedAdmins ={HandleOpenViewDeletedAdmins}
                   HandleCloseViewDeletedAdmins ={HandleCloseViewDeletedAdmins}
                   viewDeletedAdmins= {viewDeletedAdmins}
+                  setAdminEdit={setAdminEdit}
         />;
 
       default:

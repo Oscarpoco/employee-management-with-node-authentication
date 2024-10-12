@@ -2,19 +2,17 @@ import React, { useState, useEffect } from 'react';
 import './employees.css';
 import './registration.css';
 
-// ICONS
-import { GrView } from "react-icons/gr";
-import { MdOutlinePlaylistRemove } from "react-icons/md";
-
 function Admins({ 
   admins = [], 
+  deletedAdmins = [], 
   onDeleteAdmin, 
   onViewEmployee, 
-  deletedAdmins = [], 
   viewDeletedAdmins, 
   HandleOpenViewDeletedAdmins, 
   HandleCloseViewDeletedAdmins,
-  onAddEmployee
+  onAddEmployee,
+  setAdminEdit,
+  
 }) 
 
 {
@@ -100,7 +98,9 @@ function Admins({
               onChange={(e) => setSearchId(e.target.value)} 
             />
             <button onClick={handleSearch}>Search</button>
+
             <button onClick={(()=>{setShowAddingForm(true)})}>Add New Admin</button>
+
             <button className='previous-employees-button' onClick={HandleOpenViewDeletedAdmins}>View Previous Admins</button>
           </div>
           <div className='employees-table'>
@@ -116,6 +116,7 @@ function Admins({
                     <th>Phone</th>
                     <th>Image</th>
                     <th>Actions</th>
+                    <th>Blocking</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,8 +130,18 @@ function Admins({
                       <td>{admin.phone}</td>
                       <td><img src={admin.profilePicture} alt='employee'/></td>
                       <td className='table-div'>
-                        <button className='table-button' onClick={() => onViewEmployee(admin)}><GrView className='icons'/></button>
-                        <button className='table-button' onClick={() => onDeleteAdmin(admin.id)}><MdOutlinePlaylistRemove className='icons'/></button>
+                        <button className='table-button' onClick={() => 
+                          {
+                            onViewEmployee(admin);
+                            setAdminEdit(true);
+                          }
+                          }>VIEW</button>
+                        <button className='table-button' onClick={() => onDeleteAdmin(admin.id)}>REMOVE</button>
+                      </td>
+
+                      <td className='table-div'>
+                        <button className='table-button' onClick={() => onViewEmployee(admin)}>DISABLE</button>
+                        <button className='table-button' onClick={() => onDeleteAdmin(admin.id)}>ENABLE</button>
                       </td>
                     </tr>
                   ))}

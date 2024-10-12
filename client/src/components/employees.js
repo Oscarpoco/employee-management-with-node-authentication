@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './employees.css';
 
-// ICONS
-import { GrView } from "react-icons/gr";
-import { MdOutlinePlaylistRemove } from "react-icons/md";
-
-function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEmployees = [], viewDeletedEmployees, HandleOpenViewDeletedEmployees, HandleCloseViewDeletedEmployees }) {
+function Employees({ 
+  employees = [], 
+  onDeleteEmployee,
+  onViewEmployee, 
+  deletedEmployees = [], 
+  viewDeletedEmployees, 
+  HandleOpenViewDeletedEmployees, 
+  HandleCloseViewDeletedEmployees,
+  setAdminEdit 
+}) {
   const [searchId, setSearchId] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState(employees);
   const [filteredPreviousEmployees, setFilteredPreviousEmployees] = useState(deletedEmployees);
@@ -84,8 +89,13 @@ function Employees({ employees = [], onDeleteEmployee, onViewEmployee, deletedEm
                       <td>{employee.phone}</td>
                       <td><img src={employee.profilePicture} alt='employee'/></td>
                       <td className='table-div'>
-                        <button className='table-button' onClick={() => onViewEmployee(employee)}><GrView className='icons'/></button>
-                        <button className='table-button' onClick={() => onDeleteEmployee(employee.id)}><MdOutlinePlaylistRemove className='icons'/></button>
+                        <button className='table-button' onClick={() => 
+                          {
+                            onViewEmployee(employee)
+                            setAdminEdit(false);
+                          }
+                          }>VIEW</button>
+                        <button className='table-button' onClick={() => onDeleteEmployee(employee.id)}>REMOVE</button>
                       </td>
                     </tr>
                   ))}

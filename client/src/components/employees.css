@@ -229,6 +229,7 @@ button
     background: #fff;
     border: 2px solid white;
     transition: all .5s ease-in-out;
+    color: black;
 }
 
 .table-button
@@ -236,21 +237,16 @@ button
     background: aqua;
     border-radius: 5px;
     color: black;
-    width: 70%;
-    margin-left: 7px;
+    width: 100%;
 }
 
 .table-button:last-child
 {
     border-radius: 5px;
-    color: black;
-    margin: 7px 0 0 7px;
-}
-
-.icons
-{
-    font-size: 2em;
-    color: red;
+    color: #fff;
+    margin: 7px 0 0 0;
+    background: rgb(160, 34, 34);
+    border: 2px solid red;
 }
 
 p 
