@@ -188,7 +188,7 @@ thead th
     background: #434343;
     box-sizing: 0 0 10px;
     font-size: 100%;
-    padding: 1em;
+    padding: 1em .7em;
     z-index: 1;
 }
 
@@ -197,7 +197,7 @@ thead th
 {
     background: rgba(0, 0, 0, .7);
     font-size: 100%;
-    padding: .3em .7em;
+    padding: .3em .5em;
     white-space: nowrap;
 }
 

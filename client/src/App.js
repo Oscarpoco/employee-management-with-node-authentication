@@ -439,6 +439,8 @@ function App() {
                   HandleCloseViewDeletedAdmins ={HandleCloseViewDeletedAdmins}
                   viewDeletedAdmins= {viewDeletedAdmins}
                   setAdminEdit={setAdminEdit}
+                  setNotification ={setNotification}
+                  setIsLoading={setIsLoading}
         />;
 
       default:

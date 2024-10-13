@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './employees.css';
 import './registration.css';
 
@@ -12,7 +13,7 @@ function Admins({
   HandleCloseViewDeletedAdmins,
   onAddEmployee,
   setAdminEdit,
-  
+  handleAddAdmin
 }) 
 
 {
@@ -36,9 +37,9 @@ function Admins({
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    const newEmployee = { name, surname, email, idNumber, position, phone, password };
-    console.log('Employee data from form:', newEmployee);  
-    onAddEmployee(newEmployee, image);
+    const newAdmin = { name, surname, email, idNumber, position, phone, password };
+    console.log('Employee data from form:', newAdmin);  
+    handleAddAdmin(newAdmin, image);
   
     // Clear the form after submission
     setName('');
@@ -47,6 +48,7 @@ function Admins({
     setId('');
     setPosition('');
     setPhone('');
+    setPassword('');
     setImage(null);
     setShowAddingForm(false)    
   };
@@ -81,6 +83,16 @@ function Admins({
       setFilteredPreviousAdmins(deletedAdmins);
     }
   };
+
+  // HANDLE ENABLING AND DISABLING
+ 
+
+
+
+
+
+
+  
 
   return (
     <div className='employees-box'>
@@ -140,8 +152,8 @@ function Admins({
                       </td>
 
                       <td className='table-div'>
-                        <button className='table-button' onClick={() => onViewEmployee(admin)}>DISABLE</button>
-                        <button className='table-button' onClick={() => onDeleteAdmin(admin.id)}>ENABLE</button>
+                        <button id='Enable' className='table-button' >ENABLE</button>
+                        <button id='Disable' className='table-button' >DISABLE</button>
                       </td>
                     </tr>
                   ))}

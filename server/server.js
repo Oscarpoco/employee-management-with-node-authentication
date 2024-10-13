@@ -328,6 +328,35 @@ app.delete('/admins/:id', async (req, res) => {
   }
 });
 
+// ENABLE AND DISABLE OF THE ADMIN
+
+// CHECK EXISTANCE
+app.post('/check-admin', async (req, res) => {
+  const { email, idNumber, phone } = req.body;
+
+  try {
+    const idNumberQuery = await db.collection('admins').where('idNumber', '==', idNumber).get();
+    if (!idNumberQuery.empty) {
+      return res.json({ exists: true, message: 'An admins with this ID number is already registered' });
+    }
+
+    const phoneQuery = await db.collection('admins').where('phone', '==', phone).get();
+    if (!phoneQuery.empty) {
+      return res.json({ exists: true, message: 'An admins with this phone number is already registered' });
+    }
+
+    const emailQuery = await db.collection('admins').where('email', '==', email.toLowerCase()).get();
+    if (!emailQuery.empty) {
+      return res.json({ exists: true, message: 'An admins with this email is already registered' });
+    }
+
+    res.json({ exists: false });
+  } catch (error) {
+    console.error('Error checking admins:', error);
+    res.status(500).json({ message: 'Failed to check admins' });
+  }
+});
+
 
 
 // Start server
