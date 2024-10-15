@@ -5,11 +5,12 @@ This project is an **Employee Management System** built using a **Node.js** back
 ## Features
 
 - Add a new employee
-- Check if an employee already exists (by email, ID number, or phone number)
-- Get all employees
-- Update employee details
-- Delete an employee and move them to the `deleted_employees` collection
-- Get all deleted employees
+- Add a new admin
+- Check if an employee/ admin already exists (by email, ID number, or phone number)
+- Get all employees / admins
+- Update employee / admins details
+- Delete an employee/ admins and move them to the `deleted_employees/admins` collection
+- Get all deleted employees / admins
 - User-friendly React frontend for managing employees
 
 ---
